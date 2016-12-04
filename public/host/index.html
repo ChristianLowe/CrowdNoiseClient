@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>CrowdNoise Host</title>
+
+    <script src="http://code.jquery.com/jquery-3.1.1.js"
+            integrity="sha256-16cdPddA6VdVInumRGo6IbivbERE8p7CQR3HzTBuELA="
+            crossorigin="anonymous"></script>
+
+    <script>
+        var tag = document.createElement('script');
+        tag.src = "https://www.youtube.com/iframe_api";
+        var firstScriptTag = document.getElementsByName('script')[0];
+        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+        var player;
+        function onYouTubeIframeAPIReady() {
+            player = new YT.Player('player', {
+                width: '640',
+                height: '480',
+                videoId: 'XUwkGFw226U',
+                events: {
+                    'onReady': onPlayerReady,
+                    'onStateChange': onPlayerStateChange
+                }
+            });
+        }
+
+        function onPlayerReady(event) {
+            event.target.playVideo();
+        }
+
+        function changeId(newId) {
+            player.videoId = newId;
+        }
+
+        function onPlayerStateChange(event) {
+
+        }
+    </script>
+</head>
+<body>
+    <table style="width:90%">
+        <tr>
+            <th>
+                Lorem Ipsum<br/>
+                <input type="button" value="Change" onclick="changeId('oHg5SJYRHA0')">
+            </th>
+            <th>
+                <div id="player"></div>
+
+                <script>
+                    var tag = document.createElement('script');
+
+                    tag.src = "https://www.youtube.com/iframe_api";
+                    var firstScriptTag = document.getElementsByTagName('script')[0];
+                    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+                    var player;
+                    function onYouTubeIframeAPIReady() {
+                        player = new YT.Player('player', {
+                            width: '640',
+                            height: '480',
+                            videoId: 'XUwkGFw226U',
+                            events: {
+                                'onReady': onPlayerReady,
+                                'onStateChange': onPlayerStateChange
+                            }
+                        });
+                    }
+
+                    function onPlayerReady(event) {
+                        event.target.playVideo();
+                    }
+
+                    function changeId(newId) {
+                        player.loadVideoById(newId);
+                    }
+
+                    function onPlayerStateChange(event) {
+                        checkState(false);
+                    }
+
+                    function checkState(checkInvalid) {
+                        if (player.getPlayerState() == YT.PlayerState.ENDED
+                            || (checkInvalid && player.getPlayerState() == -1)) {
+                            $.get("http://107.170.224.64:8080/queue/next", function (data) {
+                                console.info(data);
+                                changeId(data);
+                            })
+                        }
+                    }
+                    setInterval(function() {checkState(true)}, 1000);
+                </script>
+
+            </th>
+        </tr>
+    </table>
+</body>
+</html>

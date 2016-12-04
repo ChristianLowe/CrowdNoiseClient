@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>CrowdNoise Client</title>
+    <link rel="stylesheet" href="../stylesheets/main.css">
+
+    <script src="http://code.jquery.com/jquery-3.1.1.js"
+            integrity="sha256-16cdPddA6VdVInumRGo6IbivbERE8p7CQR3HzTBuELA="
+            crossorigin="anonymous"></script>
+
+    <script>
+        $(document).ready(function() {
+            var $form = $('form');
+            $form.submit(function() {
+                $.post($(this).attr('action'), $(this).serialize(), function (response, status) {
+                    console.log(status);
+
+                    var div = document.getElementById('statusdiv');
+                    div.innerHTML = "Success!";
+                    refresh();
+                });
+
+
+                return false;
+            });
+        });
+    </script>
+    <script>
+        function refresh() {
+            var $list = "";
+            $.get("http://107.170.224.64:8080/queue", function(data) {
+                for (var i = 0; i < data.length; i++) {
+                    $list = $list + "<li>" + data[i] + "</li>";
+                }
+                document.getElementById("qdiv").innerHTML = "<ol>" + $list + "</ol>";
+            });
+        }
+
+        refresh();
+        setInterval(refresh, 1000);
+    </script>
+</head>
+<body>
+    <div id="statusdiv"></div>
+    <table style="width:90%">
+        <tr>
+            <th valign="top">
+                Add your own song! <br/>
+                <br/>
+                <form method="POST" action="http://107.170.224.64:8080/queue">
+                    <input type="text" name="id" placeholder="YouTube URL">
+                    <input type="submit" value="Add">
+                </form>
+            </th>
+            <th align="left">
+                Videos on the Queue:<br/>
+                <div id="qdiv"></div>
+            </th>
+        </tr>
+    </table>
+</body>
+</html>
